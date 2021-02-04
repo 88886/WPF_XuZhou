@@ -28,6 +28,6 @@ C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\Debug\WPF_XuZho
 C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\Debug\View\LoginView.g.cs
 C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\Debug\View\LoginView.baml
 C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\Debug\WPF_XuZhou.csprojAssemblyReference.cache
 C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\Debug\View\MyCourseView.g.cs
 C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\Debug\View\MyCourseView.baml
+C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\Debug\WPF_XuZhou.csprojAssemblyReference.cache

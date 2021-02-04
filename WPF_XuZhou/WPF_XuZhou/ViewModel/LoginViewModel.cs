@@ -13,7 +13,11 @@ namespace WPF_XuZhou.ViewModel
 {
     public class LoginViewModel : ViewModelBase
     {
+        public LoginViewModel()
+        {
+            this.Name = "a320321322";
 
+        }
 
         #region 事件
         public ICommand LoginCommond => new DelegateCommand(obj =>
@@ -32,7 +36,7 @@ namespace WPF_XuZhou.ViewModel
                 return;
             }
             WebHelper.UserCookie = loginresult.Cookie;
-            Growl.Success("登录成功,正在跳转！");
+            Growl.Success("登录成功！");
             Broadcast.PushBroadcast("frameNavigation", new MyCourseView());
         });
 

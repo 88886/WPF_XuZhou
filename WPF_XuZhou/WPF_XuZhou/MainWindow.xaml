@@ -14,7 +14,7 @@
     <Border CornerRadius="10" Background="Transparent"  hc:WindowAttach.IsDragElement="True">
         <Grid >
             <Frame  x:Name="framemain"  BorderThickness="0" NavigationUIVisibility="Hidden"  />
-            <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" >
+            <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right"  Height="150"  VerticalAlignment="Top">
                 <StackPanel  hc:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,5,5,5"/>
             </ScrollViewer>
         </Grid>

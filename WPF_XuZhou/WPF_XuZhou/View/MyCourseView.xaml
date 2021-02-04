@@ -7,7 +7,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       xmlns:hc="https://handyorg.github.io/handycontrol"
-       xmlns:ViewModel="clr-namespace:WPF_XuZhou.ViewModel"
+      xmlns:ViewModel="clr-namespace:WPF_XuZhou.ViewModel"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
       Title="我的课程">
     <Page.DataContext>
         <ViewModel:MyCourseViewModel/>
@@ -15,37 +16,97 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" CornerRadius="10 10 0 0" Background="#0E64F4" Effect="{StaticResource EffectShadow5}">
+        <Border Grid.Row="0" CornerRadius="10 10 0 0" Background="#0E64F4">
             <TextBlock Text="我的课程" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
         </Border>
         <Border Grid.Row="1" CornerRadius="0 0 10 10" Background="White">
-            <ListBox ItemsSource="{Binding MyCourseList}" HorizontalAlignment="Left" Style="{StaticResource WrapPanelHorizontalListBox}" Margin="10" BorderThickness="0">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel IsItemsHost="True"/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <hc:Card Background="White" Effect="{StaticResource EffectShadow5}" Width="200" Height="200" Margin="20">
-                            <hc:Card.Header>
-                                <StackPanel >
-                                    
-                                </StackPanel>
-                            </hc:Card.Header>
-                            <hc:Card.FooterTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding CourseName}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </hc:Card.FooterTemplate>
-                        </hc:Card>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <StackPanel>
+                <ListBox Height="400" x:Name="listboxclass" Visibility="{Binding ShowCourse}"  ItemsSource="{Binding MyCourseList}" Width="800" HorizontalAlignment="Center" Style="{StaticResource WrapPanelHorizontalListBox}"  BorderThickness="0" Background="Transparent">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding OpenCourseCommond}" CommandParameter="{Binding ElementName=listboxclass,Path=SelectedItem}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="20" CornerRadius="10" Background="White" Effect="{StaticResource EffectShadow5}" Width="200" Height="280">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="3*"/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" CornerRadius="10 10 0 0">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding IndexPhoto}" Stretch="Fill"/>
+                                        </Border.Background>
+                                    </Border>
+                                    <Border Grid.Row="1" CornerRadius="0 0 10 10">
+                                        <Grid Margin="5">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="20"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Row="0" Text="{Binding CourseName}" TextWrapping="Wrap"/>
+                                            <ProgressBar Grid.Row="1" Value="{Binding Progress}" Margin="0" Height="11"/>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <ListBox   Background="Transparent" Height="400" Width="780" HorizontalAlignment="Center" Visibility="{Binding ShowCourseInfo}" x:Name="listboxclassinfo"   ItemsSource="{Binding CourseInfo}"  Style="{StaticResource WrapPanelHorizontalListBox}"  BorderThickness="0" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding OpenCourseCommond}" CommandParameter="{Binding ElementName=listboxclassinfo,Path=SelectedItem}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin=" 10" CornerRadius="10" Background="White" Effect="{StaticResource EffectShadow5}" Width="240" Height="280">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition  Height="4*"/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" CornerRadius="10 10 0 0">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding imgurl}" Stretch="Fill"/>
+                                        </Border.Background>
+                                    </Border>
+                                    <Border Grid.Row="1" CornerRadius="0 0 10 10">
+                                        <TextBlock Margin="10"  Text="{Binding title}" TextWrapping="Wrap"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
         </Border>
+
+        <Canvas Width="40" Height="40" Margin="730 395 0 0">
+            <Border  Width="40" Height="40" CornerRadius="40" Background="#0E64F4" Effect="{StaticResource EffectShadow5}">
+                <TextBlock Text="&#xe60b;" Foreground="White" FontFamily="{StaticResource IconFont}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:InvokeCommandAction Command="{Binding ShowPageHome}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Border>
+        </Canvas>
     </Grid>
 </Page>

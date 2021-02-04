@@ -9,6 +9,9 @@
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <FontFamily x:Key="IconFont">
+                Pack://application:,,,/WPF_XuZhou;component/Upload/Fonts/#iconfont
+         </FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
