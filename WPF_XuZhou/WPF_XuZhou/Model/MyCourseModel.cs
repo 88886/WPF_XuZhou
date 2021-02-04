@@ -8,6 +8,7 @@ namespace WPF_XuZhou.Model
 {
     public class MyCourseModel
     {
+        public bool IsLearnNow { get; set; }
         public string CourseName { get; set; }
         public string CourseUrl { get; set; }
         public decimal Progress { get; set; }

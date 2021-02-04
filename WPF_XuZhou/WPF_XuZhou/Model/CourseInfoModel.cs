@@ -8,6 +8,23 @@ namespace WPF_XuZhou.Model
 {
     public class CourseInfoModel
     {
+        private string _progress { get; set; }
+        public string progress
+        {
+            get { return _progress; }
+            set {
+                if (!value.Contains("%"))
+                    _progress = "100";
+                else
+                {
+                    _progress = value.Replace("%", "");
+                }
+            }   
+        }
+        public decimal DProgress
+        {
+            get { return Convert.ToDecimal(_progress); }
+        }
         public string title { get; set; }
         public string url { get; set; }
 
