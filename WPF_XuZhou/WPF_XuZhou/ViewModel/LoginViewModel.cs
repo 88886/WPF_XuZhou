@@ -15,8 +15,7 @@ namespace WPF_XuZhou.ViewModel
     {
         public LoginViewModel()
         {
-            this.Name = "a320321322";
-
+      
         }
 
         #region 事件

@@ -56,7 +56,14 @@ namespace WPF_XuZhou.ViewModel
             {
                 Growl.Info("没有找到课程！");
             }
+
+
         }
+
+        #region 线程
+
+        CancellationTokenSource cts;
+        #endregion
 
         #region 行为
         /// <summary>
@@ -66,62 +73,81 @@ namespace WPF_XuZhou.ViewModel
         {
             if (NowLearnCourse != null && NowLearnCourse.IsLearnNow)
             {
-                Growl.Info("当前有项目正在学习,请暂停其他课程后再开启本课程！");
+                cts.Cancel();
                 return;
             }
             NowLearnCourse.IsLearnNow = !NowLearnCourse.IsLearnNow;
             OnPropertyChanged(nameof(BorderText));
+            OnPropertyChanged(nameof(ShowProgress));
+            cts= new CancellationTokenSource();
             if (NowLearnCourse.IsLearnNow == false) return;
+
             /*下方代码表示要开始学习了*/
             Message = "正在获取待学视频...";
-            tasklearnvideo= new Task(() =>
+            CancellationToken token = cts.Token;
+            cts.Token.Register(() =>
             {
-                CourseInfo.ForEach(x =>
-                {
-                    if (x.DProgress >= 100) return;
-                    string onlineVideo = WebHelper.Get(BaseConfig.Host + "/" + x.url).Html;
-                    string studyjson = GetStudyInfo(onlineVideo);
-                    var videomatchs = Regex.Matches(onlineVideo, regexvideostr);
-                    foreach (Match match in videomatchs)
-                    {
-
-                        string videoId = match.Groups[1].Value;
-                        string videoname = match.Groups[5].Value;
-                        Message = $"正在学习视频{videoname}";
-                        int videoprogress = Convert.ToInt32(match.Groups[4].Value);
-                        int videolength = Convert.ToInt32(videoprogress * x.DProgress);
-                        decimal dpercent = x.DProgress;
-                        decimal doldprogress = dpercent;
-                        string videoinit = WebHelper.Post(BaseConfig.Host + "/ajax/video.asp", "video_id=" + videoId).Html;
-                        while (dpercent < 100)
-                        {
-                            Console.WriteLine("正在学习" + videoname);
-                            servervideo jstudy = JsonConvert.DeserializeObject<servervideo>(studyjson);
-                            jstudy.curVideo = Convert.ToInt32(videoId);
-                            jstudy.curPoint = videolength;
-                            string sdata = $"platid={jstudy.platid}&gcid={jstudy.gcid}&kcid={jstudy.kcid}&kjid={jstudy.kjid}&st={jstudy.st}&chcode={jstudy.chcode}&v={jstudy.v}&curVideo={videolength}&curPoint={videolength}";
-
-                            string learn_server = WebHelper.Post(BaseConfig.Host + "/learn_server.asp", sdata).Html;
-                            JObject jlearn = JObject.Parse(learn_server);
-                            int state = Convert.ToInt32(jlearn["state"]);
-                            if (state == 1)
-                            {
-                                string jnPostData = WebHelper.Post(BaseConfig.Host + "/api/jnPostData.asp", "gcid=" + jstudy.gcid).Html;
-                            }
-                            dpercent = Convert.ToDecimal(jlearn["percent"].ToString().Replace("%", ""));
-                            int dstudy = Convert.ToInt32((dpercent - doldprogress) * videolength) / 60;
-                            Console.WriteLine("当前进度:" + dpercent + "相当于学习了:" + dstudy + "秒");
-                            NowVideoProgress = dpercent;
-                            Thread.Sleep(250000);
-                            doldprogress = dpercent;
-                        }
-                    }
-                });
-
+                NowLearnCourse.IsLearnNow = false;
+                OnPropertyChanged(nameof(BorderText));
+                OnPropertyChanged(nameof(ShowProgress));
             });
-            tasklearnvideo.Start();
+            Task.Run(() =>
+               {
+                   CourseInfo.ForEach(x =>
+                   {
+                       if (x.DProgress >= 100) return;
+                       string onlineVideo = WebHelper.Get(BaseConfig.Host + "/" + x.url).Html;
+                       string studyjson = GetStudyInfo(onlineVideo);
+                       var videomatchs = Regex.Matches(onlineVideo, regexvideostr);
+                       foreach (Match match in videomatchs)
+                       {
 
+                           string videoId = match.Groups[1].Value;
+                           string videoname = match.Groups[5].Value;
+                           Message = $"正在学习视频{videoname}";
+                           int videoprogress = Convert.ToInt32(match.Groups[4].Value);
+                           int videolength = Convert.ToInt32(videoprogress * x.DProgress);
+                           decimal dpercent = x.DProgress;
+                           decimal doldprogress = dpercent;
+                           string videoinit = WebHelper.Post(BaseConfig.Host + "/ajax/video.asp", "video_id=" + videoId).Html;
+                           while (dpercent < 100)
+                           {
+                               Console.WriteLine("正在学习" + videoname);
+                               servervideo jstudy = JsonConvert.DeserializeObject<servervideo>(studyjson);
+                               jstudy.curVideo = Convert.ToInt32(videoId);
+                               jstudy.curPoint = videolength;
+                               string sdata = $"platid={jstudy.platid}&gcid={jstudy.gcid}&kcid={jstudy.kcid}&kjid={jstudy.kjid}&st={jstudy.st}&chcode={jstudy.chcode}&v={jstudy.v}&curVideo={videolength}&curPoint={videolength}";
 
+                               string learn_server = WebHelper.Post(BaseConfig.Host + "/learn_server.asp", sdata).Html;
+                               JObject jlearn = JObject.Parse(learn_server);
+                               if (learn_server.Contains("msg"))
+                               {
+                                   Message = $"返回结果:" + jlearn["msg"].ToString() + "-正在尝试重新开始 " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                                   WebHelper.Post(BaseConfig.Host + "/ajax/video.asp", "video_id=" + videoId);
+                                   Thread.Sleep(10000);
+                                   continue;
+                               }
+                               int state = Convert.ToInt32(jlearn["state"]);
+                               if (state == 1)
+                               {
+                                   string jnPostData = WebHelper.Post(BaseConfig.Host + "/api/jnPostData.asp", "gcid=" + jstudy.gcid).Html;
+                               }
+                               dpercent = Convert.ToDecimal(jlearn["percent"].ToString().Replace("%", ""));
+                               int dstudy = Convert.ToInt32((dpercent - doldprogress) * videolength) / 60;
+                               Console.WriteLine("当前进度:" + dpercent + "相当于学习了:" + dstudy + "秒");
+                               NowVideoProgress = dpercent;
+                               int time = 250;
+                               while (time > 1)
+                               {
+                                   time = time - 1;
+                                   Thread.Sleep(1000);
+                                   Message = $"正在学习视频{videoname},倒计时{time}秒";
+                               }
+                               doldprogress = dpercent;
+                           }
+                       }
+                   });
+               }, token);
         });
 
         public ICommand OpenCourseCommond => new DelegateCommand(obj =>
@@ -150,6 +176,11 @@ namespace WPF_XuZhou.ViewModel
         });
         public ICommand ShowPageHome => new DelegateCommand(obj =>
         {
+            if (NowLearnCourse.IsLearnNow)
+            {
+                Growl.Info("当前正在学习:" + NowLearnCourse.CourseName + "-请暂停学习后返回");
+                return;
+            }
             PageIndex = 1;
             OnPropertyChanged(nameof(ShowCourse));
             OnPropertyChanged(nameof(ShowCourseInfo));
@@ -157,7 +188,6 @@ namespace WPF_XuZhou.ViewModel
         #endregion
 
         #region 属性
-        Task tasklearnvideo;
         static MyCourseModel NowLearnCourse = new MyCourseModel();//当前学习的课程
         static int PageIndex = 1;
         private string _message = "正在学习";
@@ -183,7 +213,10 @@ namespace WPF_XuZhou.ViewModel
             }
         }
 
-
+        public Visibility ShowProgress
+        {
+            get { return NowLearnCourse.IsLearnNow ? Visibility.Visible : Visibility.Collapsed; }
+        }
         /// <summary>
         /// 播放暂停开关
         /// </summary>
@@ -194,12 +227,12 @@ namespace WPF_XuZhou.ViewModel
                 if (NowLearnCourse == null || NowLearnCourse.IsLearnNow == false)
                 {
                     return "\uea8d";
-                } else
+                }
+                else
                 {
                     /*暂停*/
-                    //tasklearnvideo.Cancel();//暂停上一个task
                     return "\ue6fc";
-                }       
+                }
             }
         }
 

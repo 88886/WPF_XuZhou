@@ -32,6 +32,5 @@ C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\x86\Debug\WPF_X
 C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\x86\Debug\WPF_XuZhou.csproj.CopyComplete
 C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\x86\Debug\WPF_XuZhou.exe
 C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\x86\Debug\WPF_XuZhou.pdb
-C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\obj\x86\Debug\WPF_XuZhou.csprojAssemblyReference.cache
 C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\bin\x86\Debug\Newtonsoft.Json.dll
 C:\Users\Zhang\source\repos\WPF_XuZhou\WPF_XuZhou\WPF_XuZhou\bin\x86\Debug\Newtonsoft.Json.xml

@@ -99,17 +99,19 @@
                 </ListBox>
             </StackPanel>
         </Border>
-        <Canvas Width="600" Height="65"  Margin="0 400 0 0">
-            <Border CornerRadius="10" Background="LightGray" Width="600" Height="45" Opacity="1"  Effect="{StaticResource EffectShadow5}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding Message}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"/>
-                    <ProgressBar Grid.Row="1" Style="{StaticResource ProgressBarWarning}" Value="{Binding NowVideoProgress}" Margin="5" Height="12"/>
-                </Grid>
-            </Border>
+        <Canvas Width="600" Height="65"  Margin="0 400 0 0" Visibility="{Binding ShowProgress}">
+            <hc:TransitioningContentControl>
+                <Border CornerRadius="10" Background="White"  Width="600" Height="45" Opacity="0.8"  Effect="{StaticResource EffectShadow5}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding Message}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"/>
+                        <ProgressBar Grid.Row="1" Style="{StaticResource ProgressBarWarning}" Value="{Binding NowVideoProgress}" Margin="5" Height="12"/>
+                    </Grid>
+                </Border>
+            </hc:TransitioningContentControl>
         </Canvas>
         <Canvas Width="40" Height="40" Margin="730 340 0 0" Visibility="{Binding ShowCourseInfo}">
             <Border  Width="40" Height="40" CornerRadius="40" Background="#ff5837" Effect="{StaticResource EffectShadow5}">
