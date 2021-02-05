@@ -7,4 +7,4 @@ ___
 
 
 ## 感谢以下开源模块/方法
-### 苏飞http万能框架、DMSkin、HandyControl
+### DMSkin、HandyControl
